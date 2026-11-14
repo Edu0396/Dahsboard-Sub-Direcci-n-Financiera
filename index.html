@@ -74,7 +74,7 @@ body{background:var(--plane);color:var(--ink);font:14px/1.45 Tahoma,Verdana,Gene
 .ph-row>div{flex:1;min-width:0}
 .logo{flex:none;margin-left:auto;align-self:flex-start;height:88px;width:auto;display:block;background:var(--logoBg);border-radius:10px;padding:4px 6px}
 .kic{flex:none;display:inline-block;width:34px;height:34px;background:var(--c) center/contain no-repeat}
-.pic{width:44px;height:44px}
+.pic{width:64px;height:64px}
 .nic{flex:none;width:24px;height:24px;background:currentColor;-webkit-mask:var(--w) center/contain no-repeat;mask:var(--w) center/contain no-repeat}
 .k-h{display:flex;align-items:center;gap:10px;margin-bottom:2px}
 .hero-b{display:flex;align-items:center;gap:18px}
@@ -119,12 +119,16 @@ button,select,input,textarea{font-family:inherit}
 :is(.btn,select,input,button,[tabindex]):focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .status{font-size:12.5px;color:var(--ink2);margin:0 0 10px;min-height:18px}
 .status.err{color:var(--crit)}
-.filters{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:flex-end;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:8px}
-.f{display:flex;flex-direction:column;gap:3px;min-width:0}
-.f label{font-size:11px;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em}
+.filters{display:grid;grid-template-columns:repeat(6,minmax(0,1fr)) auto;gap:12px 14px;align-items:end;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:8px}
+.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.f label{font-size:11.5px;color:var(--ink2);text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .f select,.f input,.search{font:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--axis);border-radius:8px;background:var(--surface);color:var(--ink);max-width:200px}
-.grow{flex:1}
+.filters .f select{width:100%;max-width:none;height:40px;font-size:14.5px;padding:0 10px;border-radius:9px}
+.filters>.btn{width:40px;height:40px;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.filters>.btn svg{display:block}
 .scope{font-size:12.5px;color:var(--ink2);margin:0 2px 14px}
+@container (max-width:1000px){.filters{grid-template-columns:repeat(3,minmax(0,1fr))}.filters>.btn{grid-column:1/-1;justify-self:start}}
+@container (max-width:560px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:14px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;min-width:0}
 .k-l{font-size:12.5px;color:var(--ink2)}
@@ -224,6 +228,7 @@ tfoot td{font-weight:650;border-top:1px solid var(--axis);border-bottom:0}
   .side-foot .btn{width:auto}
   .content{padding:16px 14px 40px}
   .logo{height:54px;padding:3px 4px}
+  .pic{width:52px;height:52px}
   .defs{grid-template-columns:minmax(0,1fr)}
 }
 @media (max-width:560px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.hero,.kpi-pct,.kpi-sec{grid-column:1/-1}}
@@ -231,7 +236,6 @@ tfoot td{font-weight:650;border-top:1px solid var(--axis);border-bottom:0}
   .mp text,.mp .lead,.mp .dot{display:none}
   .hrow,.wide .hrow,.meta .hrow{grid-template-columns:minmax(0,1fr) auto}
   .hl{grid-column:1/-1}
-  .f select,.f input{max-width:150px}
 }
 @media (forced-colors:active){.seg,.sw{forced-color-adjust:none}}
 </style>
@@ -1119,7 +1123,9 @@ function buildFilters() {
     sel.addEventListener('change', () => { state.filters[k] = sel.value; state.page = 0; render(); });
     box.append(h('div', { class: 'f' }, h('label', { for: 'f-' + k }, label), sel));
   }
-  box.append(h('button', { class: 'btn', type: 'button', onclick: () => { state.filters = { ...EMPTY_F }; state.page = 0; render(); } }, 'Limpiar filtros'), h('div', { class: 'grow' }));
+  const clr = h('button', { class: 'btn', type: 'button', id: 'f-clear', title: 'Limpiar filtros', 'aria-label': 'Limpiar filtros', onclick: () => { state.filters = { ...EMPTY_F }; state.page = 0; render(); } });
+  clr.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 3H2l8 9.46V19l4 2v-6.54"/><path d="m22 3-5 5"/><path d="m17 3 5 5"/></svg>';
+  box.append(clr);
 }
 
 /* ───────── tema y carga de archivos ───────── */
